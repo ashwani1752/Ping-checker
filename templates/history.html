@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ping History</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="navbar">
+    <div class="brand">📡 Ping Checker</div>
+    <nav>
+      <a href="{{ url_for('index') }}">Dashboard</a>
+      <a href="{{ url_for('history') }}" class="active">History</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-head">
+        <h1>Ping Test History</h1>
+        <!-- POST form so that history is deleted safely -->
+        <form id="clearForm" method="POST" action="{{ url_for('clear_history') }}">
+          <button type="submit" class="danger" {% if not rows %}disabled{% endif %}>Clear History</button>
+        </form>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>IP / Hostname</th><th>Date &amp; Time</th>
+              <th>Status</th><th>Response Time</th><th>Packet Loss</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ row['host'] }}</td>
+              <td>{{ row['tested_at'] }}</td>
+              <td>
+                <span class="badge {{ 'badge-online' if row['status'] == 'Online' else 'badge-offline' }}">
+                  {{ row['status'] }}
+                </span>
+              </td>
+              <td>{% if row['response_time'] is not none %}{{ row['response_time'] }} ms{% else %}—{% endif %}</td>
+              <td>{{ row['packet_loss'] }}%</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="muted center">No history available.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">BCA Project · Network Device Connectivity Checker using Ping</footer>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

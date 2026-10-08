@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Device Connectivity Checker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="navbar">
+    <div class="brand">📡 Ping Checker</div>
+    <nav>
+      <a href="{{ url_for('index') }}" class="active">Dashboard</a>
+      <a href="{{ url_for('history') }}">History</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Ping form -->
+    <section class="card">
+      <h1>Network Device Connectivity Checker</h1>
+      <p class="muted">Enter an IPv4 address or hostname to test whether the device is reachable.</p>
+      <form id="pingForm" class="ping-form" novalidate>
+        <input type="text" id="hostInput" placeholder="e.g. 192.168.1.1 or google.com"
+               autocomplete="off" required>
+        <button type="submit" id="checkBtn">Check Connectivity</button>
+      </form>
+
+      <!-- Result box (hidden until a test finishes) -->
+      <div id="result" class="result hidden">
+        <div id="resultMessage" class="result-message"></div>
+        <div class="result-grid">
+          <div><span>IP / Hostname</span><strong id="rHost">-</strong></div>
+          <div><span>Status</span><strong id="rStatus">-</strong></div>
+          <div><span>Response Time</span><strong id="rLatency">-</strong></div>
+          <div><span>Packets Sent</span><strong id="rSent">-</strong></div>
+          <div><span>Packets Received</span><strong id="rReceived">-</strong></div>
+          <div><span>Packet Loss</span><strong id="rLoss">-</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard numbers -->
+    <section class="stats-grid">
+      <div class="stat"><span>Total Tests</span><strong id="sTotal">0</strong></div>
+      <div class="stat online"><span>Online Devices</span><strong id="sOnline">0</strong></div>
+      <div class="stat offline"><span>Offline Devices</span><strong id="sOffline">0</strong></div>
+      <div class="stat"><span>Avg. Response Time</span><strong id="sAvg">—</strong></div>
+    </section>
+
+    <section class="two-col">
+      <div class="card">
+        <h2>Online vs Offline</h2>
+        <div class="chart-wrap">
+          <canvas id="statusChart" width="240" height="240"></canvas>
+        </div>
+        <div class="legend">
+          <span><i class="dot green"></i> Online</span>
+          <span><i class="dot red"></i> Offline</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Recent Ping Tests</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Host</th><th>Time</th><th>Status</th><th>Response</th><th>Loss</th></tr>
+            </thead>
+            <tbody id="recentBody">
+              <tr><td colspan="5" class="muted center">No tests yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">BCA Project · Network Device Connectivity Checker using Ping</footer>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
